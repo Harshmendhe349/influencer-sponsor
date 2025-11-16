@@ -2,6 +2,15 @@
 
 This is a full-stack Influencer Marketing and Sponsorship Management Platform built using Flask and SQLite. Sponsors can create campaigns, influencers can apply and negotiate, and admins can monitor all user and campaign activity.
 
+
+---
+
+## 🔗 Live Demo
+
+You can try the deployed app here:
+
+**https://influencer-sponsor-v1kn.onrender.com/**
+
 ---
 
 ## Features
