@@ -1,0 +1,94 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Search for Campaigns</h2>
+    
+    <form action="{{ url_for('search_campaigns') }}" method="GET" class="search-form mb-4">
+        <div class="form-group">
+            <label for="category">Category</label>
+            <input type="text" id="category" name="category" class="form-control" style="max-width: 500px;"> <!-- Adjusted width -->
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+    
+    {% if campaigns %}
+        <h3 class="mb-4">Campaigns</h3>
+        <div class="row">
+            {% for campaign in campaigns %}
+                <div class="col-md-4 mb-4">
+                    <div class="card campaign-card floating-card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ campaign.title }}</h5>
+                            <p class="card-text"><strong>Description:</strong> {{ campaign.description }}</p>
+                            <p class="card-text"><strong>Budget:</strong> ${{ campaign.budget }}</p>
+                            <p class="card-text"><strong>Category:</strong> {{ campaign.category }}</p>
+                            <p class="card-text"><strong>Created At:</strong> {{ campaign.created_at.strftime('%Y-%m-%d') }}</p>
+                                                        <div>
+                                                                {% if campaign.id in requested_campaign_ids %}
+                                                                    <button type="button" class="btn btn-secondary btn-sm" disabled>
+                                                                        <i class="bi bi-check2 me-1"></i> Requested
+                                                                    </button>
+                                                                {% else %}
+                                                                    <button type="button" class="btn btn-outline-primary btn-sm send-request-btn" data-campaign-id="{{ campaign.id }}" data-campaign-title="{{ campaign.title }}">
+                                                                        <i class="bi bi-envelope-plus me-1"></i> Send Ad Request
+                                                                    </button>
+                                                                {% endif %}
+                                                        </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No campaigns found matching your criteria.</p>
+    {% endif %}
+</div>
+
+<style>
+    .search-form { margin-bottom: 1.25rem; }
+    h2, h3 { font-weight:600; }
+    .campaign-card { border-radius: .6rem; overflow:hidden; }
+    .campaign-card .card-body { padding: .9rem; }
+    .send-request-btn { border-radius:.5rem; }
+    .campaign-meta { font-size:.9rem; color:#6c757d; }
+</style>
+
+<!-- Confirmation modal for sending ad requests -->
+<div class="modal fade" id="adRequestModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Ad Request</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="adRequestModalBody">Send an ad request for <strong id="adRequestCampaignTitle"></strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <form id="adRequestForm" method="POST" action="">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Yes, Send Request</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalEl = document.getElementById('adRequestModal');
+        const bsModal = new bootstrap.Modal(modalEl);
+        const titleEl = document.getElementById('adRequestCampaignTitle');
+        const formEl = document.getElementById('adRequestForm');
+
+        document.querySelectorAll('.send-request-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const campaignId = this.dataset.campaignId;
+                const campaignTitle = this.dataset.campaignTitle;
+                titleEl.textContent = campaignTitle;
+                formEl.action = `/send_ad_request/${campaignId}`;
+                bsModal.show();
+            });
+        });
+    });
+</script>
+{% endblock %}

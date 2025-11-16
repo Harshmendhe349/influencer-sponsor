@@ -1,0 +1,48 @@
+/* cards.css - responsive card grid styles */
+
+.card-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+
+.card-grid .card {
+  flex: 1 1 calc(33.333% - .75rem);
+  min-width: 220px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.18);
+  transition: transform .2s ease, box-shadow .2s ease, backdrop-filter .2s ease;
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(6px) saturate(120%);
+  border: 1px solid rgba(255,255,255,0.12);
+  transform: translateY(0);
+}
+
+@media (max-width: 992px) {
+  .card-grid .card { flex: 1 1 calc(50% - .75rem); }
+}
+
+@media (max-width: 576px) {
+  .card-grid .card { flex: 1 1 100%; }
+}
+
+.card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 18px 40px rgba(2,6,23,0.22); }
+
+
+.card h5, .card .card-title { font-size: 1.05rem; font-weight:700; color:#081028; }
+.card p { margin-bottom: .45rem; color: #223; }
+.card .card-footer { background: transparent; border-top: 1px solid rgba(16,24,40,0.04); }
+
+/* floating card helper for home page */
+.floating-card { box-shadow: 0 20px 50px rgba(2,6,23,0.18); border-radius:12px; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px) saturate(120%); border:1px solid rgba(255,255,255,0.14); position:relative; z-index:5; }
+.floating-card .card-body { padding: 1rem; }
+.floating-card .auth-title, .floating-card h1, .floating-card h3 { font-family: 'Inter', sans-serif; color:#0b1220; }
+
+/* subtle floating animation */
+@keyframes floaty { 0%{ transform: translateY(0);} 50%{ transform: translateY(-6px);} 100%{ transform: translateY(0);} }
+.floating-card.animate { animation: floaty 6s ease-in-out infinite; }
+
+.summary-cards { display:flex; gap:.75rem; flex-wrap:wrap; }
+.ummary-cards .card { flex:1 1 200px; }
+.summary-cards .card { min-width:180px; }

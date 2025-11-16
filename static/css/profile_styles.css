@@ -1,0 +1,7 @@
+/* profile_styles.css - small profile-specific helpers */
+
+.profile-header { display:flex; gap:.75rem; align-items:center; }
+.profile-avatar { width:56px; height:56px; border-radius:50%; background:#e9ecef; display:inline-flex; align-items:center; justify-content:center; font-weight:600; color:#333; }
+.profile-meta { font-size:.94rem; }
+
+.profile-section { background:#fff; border-radius:8px; padding:.85rem; box-shadow:0 1px 6px rgba(0,0,0,.04); }

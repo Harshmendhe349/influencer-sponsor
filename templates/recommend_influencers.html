@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+{% block title %}Recommended Influencers{% endblock %}
+{% block content %}
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <h4 class="mb-0">Find Top Influencers</h4>
+            <small class="text-muted">Use category or niche to get AI recommendations</small>
+        </div>
+    </div>
+
+    <form id="recommendForm" class="row g-2 align-items-end form-row-compact">
+        <div class="col-sm-6 col-md-4">
+            <label class="form-label small">Category</label>
+            <input type="text" id="category" class="form-control form-control-sm" required>
+        </div>
+        <div class="col-sm-6 col-md-4">
+            <label class="form-label small">Niche (optional)</label>
+            <input type="text" id="niche" class="form-control form-control-sm">
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-primary btn-sm" type="submit">Get Recommendations</button>
+        </div>
+    </form>
+
+    <hr>
+
+    <div id="results" class="card-grid mt-3"></div>
+
+    <script>
+        document.getElementById('recommendForm').addEventListener('submit', function(e){
+            e.preventDefault();
+            const category = document.getElementById('category').value;
+            const niche = document.getElementById('niche').value;
+            const results = document.getElementById('results');
+            results.innerHTML = '<div class="text-center text-muted">Loading...</div>';
+            fetch('/recommend_influencers', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({category,niche}) })
+                .then(r=>r.json())
+                .then(data=>{
+                    if (!data || data.error) { results.innerHTML = `<div class="text-danger">${data?.error||'No results'}</div>`; return; }
+                    if (!data.length) { results.innerHTML = '<div class="text-center text-muted">No recommendations found.</div>'; return; }
+                    results.innerHTML = data.map(inf=>`
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-1">${inf.name}</h5>
+                                <p class="small text-muted mb-1">${inf.category} — ${inf.niche}</p>
+                                <p class="mb-1">Followers: <strong>${inf.followers}</strong></p>
+                                <p class="mb-1">Engagement: <strong>${inf.engagement_rate}%</strong></p>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between align-items-center">
+                                <small class="text-muted">Score: ${inf.score ?? 'N/A'}</small>
+                                <button class="btn btn-outline-primary btn-sm" onclick="fetch('/invite_influencer', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({influencer_id:${inf.id}, sponsor_id:{{ current_user.id }}})}).then(()=>this.classList.replace('btn-outline-primary','btn-success'))">Invite</button>
+                            </div>
+                        </div>
+                    `).join('');
+                }).catch(err=>{ console.error(err); results.innerHTML = '<div class="text-danger">Failed to load.</div>'; });
+        });
+    </script>
+{% endblock %}

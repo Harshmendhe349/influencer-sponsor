@@ -1,0 +1,34 @@
+/* forms.css - compact form controls and spacing */
+
+:root { --form-radius:6px; --btn-radius:.45rem; --btn-padding:.45rem .85rem; }
+
+.form-control, .form-select, .form-control-sm { 
+  border-radius: var(--form-radius);
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+.form-control-sm { padding: .38rem .6rem; font-size: .9rem; }
+.form-label.small { font-size: .82rem; margin-bottom: .25rem; }
+
+.form-row-compact > * { margin-bottom: .45rem; }
+
+/* Default buttons slightly larger, but keep small variant */
+.btn { padding: var(--btn-padding); font-size:.94rem; border-radius:var(--btn-radius); }
+.btn-sm { padding: .28rem .52rem; font-size: .82rem; }
+
+.input-group-sm > .form-control, .input-group-sm > .form-select { padding: .35rem .5rem; }
+
+.form-group { margin-bottom: .5rem; }
+
+/* Tighter form control heights for compact look */
+select.form-control-sm, input.form-control-sm, textarea.form-control-sm { height: auto; }
+
+/* Auth card / modal like panels for consistent auth pages */
+.auth-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 6px 20px rgba(16,24,40,0.04);
+}
+.auth-title { color: #5f3bb0; font-weight:700; font-size:1.15rem; margin-bottom:.6rem; }
+.auth-hint { color:#6c757d; font-size:.9rem; }

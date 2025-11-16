@@ -1,0 +1,68 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container">
+  <div class="row align-items-center mb-4">
+    <div class="col-md-8">
+      <div class="p-4 bg-white rounded-3 shadow-sm">
+        <h1 class="h3 mb-2">Welcome back, {{ current_user.username if current_user.is_authenticated else 'User' }}!</h1>
+        <p class="text-muted mb-3">Manage campaigns, respond to ad requests, and discover new influencer matches — all from your dashboard.</p>
+        <div class="d-flex gap-2">
+          {% if current_user.is_authenticated and current_user.role == 'sponsor' %}
+            <a href="{{ url_for('create_campaign') }}" class="btn btn-primary btn-sm">Create Campaign</a>
+            <a href="{{ url_for('my_campaigns') }}" class="btn btn-outline-primary btn-sm">My Campaigns</a>
+          {% elif current_user.is_authenticated and current_user.role == 'influencer' %}
+            <a href="{{ url_for('search_campaigns') }}" class="btn btn-primary btn-sm">Search Campaigns</a>
+            <a href="{{ url_for('ad_requests') }}" class="btn btn-outline-primary btn-sm">My Ad Requests</a>
+          {% else %}
+            <a href="{{ url_for('get_login') }}" class="btn btn-primary btn-sm">Login</a>
+            <a href="{{ url_for('get_signup') }}" class="btn btn-outline-primary btn-sm">Sign up</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="summary-cards">
+        <div class="card p-2">
+          <div class="card-body small">
+            <div class="fw-bold">Active Campaigns</div>
+            <div class="text-muted">{{ current_user.campaigns|length if current_user.is_authenticated and current_user.role=='sponsor' else '—' }}</div>
+          </div>
+        </div>
+        <div class="card p-2">
+          <div class="card-body small">
+            <div class="fw-bold">Pending Requests</div>
+            <div class="text-muted">{% if current_user.is_authenticated and current_user.role=='influencer' %}{{ current_user.ad_requests|length }}{% else %}—{% endif %}</div>
+          </div>
+        </div>
+        <div class="card p-2">
+          <div class="card-body small">
+            <div class="fw-bold">Top Matches</div>
+            <div class="text-muted">AI suggestions ready</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card campaign-card p-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0">Quick Actions</h5>
+          <small class="text-muted">Shortcuts</small>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <a href="{{ url_for('recommend_influencers') }}" class="btn btn-outline-secondary btn-sm">Recommend Influencers</a>
+          <a href="{{ url_for('recommend_campaigns') }}" class="btn btn-outline-secondary btn-sm">Recommend Campaigns</a>
+          <a href="{{ url_for('search_campaigns') }}" class="btn btn-outline-primary btn-sm">Browse Campaigns</a>
+          <a href="{{ url_for('my_profile') }}" class="btn btn-outline-primary btn-sm">My Profile</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+
+

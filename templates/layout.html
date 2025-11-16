@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Influencer Platform{% endblock %}</title>
+
+    <!-- Bootstrap 5 + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Project CSS (modular) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile_styles.css') }}">
+
+    {% block css %}{% endblock %}
+  </head>
+
+  <body>
+    <!-- animated particle background canvas (behind content) -->
+    <canvas id="bgParticles"></canvas>
+    {% block navbar %}{% endblock %}
+
+    {% if current_user.is_authenticated %}
+      {% if current_user.role == 'sponsor' %}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('sponsor_dashboard') }}">Sponsor Platform</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ms-auto align-items-lg-center">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('create_campaign') }}">Create Campaign</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('my_campaigns') }}">My Campaigns</a></li>
+                <li class="nav-item">
+                  <button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#recommendationModal"><i class="fas fa-robot"></i> AI</button>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-circle me-2"></i>{{ current_user.username }}
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+                    <li class="px-3 py-2">
+                      <div class="fw-bold">{{ current_user.username }}</div>
+                      <div class="text-muted small"><i class="bi bi-envelope me-1"></i> {{ current_user.email }}</div>
+                      <div class="text-muted small"><i class="bi bi-person-badge me-1"></i> {{ current_user.role|capitalize }}</div>
+                      {% if current_user.role == 'sponsor' and sponsor %}
+                        <div class="text-muted small"><i class="bi bi-building"></i> {{ sponsor.company_name }}</div>
+                        <div class="text-muted small"><i class="bi bi-wallet2"></i> Budget: ${{ sponsor.budget }}</div>
+                      {% elif current_user.role == 'influencer' and influencer %}
+                        <div class="text-muted small"><i class="bi bi-hash"></i> Niche: {{ influencer.niche }}</div>
+                        <div class="text-muted small"><i class="bi bi-bar-chart-line"></i> {{ influencer.engagement_rate }}% Engagement</div>
+                      {% endif %}
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{{ url_for('my_profile') }}"><i class="bi bi-person-lines-fill me-2"></i>View Profile</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('update_profile') }}"><i class="bi bi-pencil-square me-2"></i>Edit Profile</a></li>
+                    <li><button class="dropdown-item" type="button" onclick="toggleDarkMode()"><i class="bi bi-moon-stars me-2"></i>Toggle Dark Mode</button></li>
+                    <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      {% elif current_user.role == 'influencer' %}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('influencer_dashboard') }}">Influencer Platform</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ms-auto align-items-lg-center">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('ad_requests') }}">Ad Requests</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('update_profile') }}">Update Profile</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('search_campaigns') }}">Search Campaigns</a></li>
+                <li class="nav-item"><button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#aiRecommendModal"><i class="fas fa-lightbulb"></i> AI</button></li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-circle me-2"></i>{{ current_user.username }}
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+                    <li class="px-3 py-2">
+                      <div class="fw-bold">{{ current_user.username }}</div>
+                      <div class="text-muted small"><i class="bi bi-envelope me-1"></i> {{ current_user.email }}</div>
+                      <div class="text-muted small"><i class="bi bi-person-badge me-1"></i> {{ current_user.role|capitalize }}</div>
+                      {% if current_user.role == 'sponsor' and sponsor %}
+                        <div class="text-muted small"><i class="bi bi-building"></i> {{ sponsor.company_name }}</div>
+                      {% elif current_user.role == 'influencer' and influencer %}
+                        <div class="text-muted small"><i class="bi bi-hash"></i> Niche: {{ influencer.niche }}</div>
+                        <div class="text-muted small"><i class="bi bi-bar-chart-line"></i> {{ influencer.engagement_rate }}% Engagement</div>
+                      {% endif %}
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{{ url_for('my_profile') }}"><i class="bi bi-person-lines-fill me-2"></i>View Profile</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('update_profile') }}"><i class="bi bi-pencil-square me-2"></i>Edit Profile</a></li>
+                    <li><button class="dropdown-item" type="button" onclick="toggleDarkMode()"><i class="bi bi-moon-stars me-2"></i>Toggle Dark Mode</button></li>
+                    <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      {% endif %}
+    {% endif %}
+
+    <main class="container py-4">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- AI Modals -->
+    <div class="modal fade" id="aiRecommendModal" tabindex="-1" aria-labelledby="aiRecommendModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="aiRecommendModalLabel"><i class="fas fa-magic text-warning"></i> AI Campaign Recommendations</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="ai-campaign-form" class="row g-2">
+              <div class="col-md-6">
+                <label for="influencer-category" class="form-label small">Category</label>
+                <input id="influencer-category" class="form-control form-control-sm" placeholder="e.g., Tech" required>
+              </div>
+              <div class="col-md-6">
+                <label for="influencer-niche" class="form-label small">Niche</label>
+                <input id="influencer-niche" class="form-control form-control-sm" placeholder="e.g., Smartphones">
+              </div>
+            </form>
+            <div id="campaign-recommendations" class="mt-3"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            <button id="recommend-campaigns-btn" type="button" class="btn btn-primary btn-sm">Get AI Recommendations</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="recommendationModal" tabindex="-1" aria-labelledby="recommendationModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="recommendationModalLabel"><i class="fas fa-users text-primary"></i> Recommended Influencers</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table class="table table-sm table-striped">
+                <thead class="table-dark small"><tr><th>Name</th><th>Category</th><th>Niche</th><th>Followers</th><th>Score</th></tr></thead>
+                <tbody id="recommendationTableBody"><tr><td colspan="5" class="text-center">No recommendations yet.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <input type="hidden" id="sponsor" value="{{ current_user.id }}">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            <button id="recommend-btn" type="button" class="btn btn-primary btn-sm">Get AI Recommendations</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- lightweight particle animation (keeps canvas behind content) -->
+    <script>
+      (function(){
+        const canvas = document.getElementById('bgParticles');
+        if(!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let w, h, particles;
+        const config = {count: 45, maxR: 2.5, speed: 0.3, hue: 220, alphaMultiplier: 0.4};
+        function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+        function rand(min,max){ return Math.random()*(max-min)+min; }
+        function init(){ particles = []; for(let i=0;i<config.count;i++){ particles.push({x:rand(0,w), y:rand(0,h), r:rand(0.6,config.maxR), vx:rand(-config.speed,config.speed), vy:rand(-config.speed,config.speed), alpha:rand(0.08,0.35)}); } }
+        function draw(){ ctx.clearRect(0,0,w,h); for(const p of particles){ ctx.beginPath(); ctx.fillStyle = `hsla(${config.hue}, 70%, 60%, ${p.alpha * config.alphaMultiplier})`; ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill(); p.x += p.vx; p.y += p.vy; if(p.x< -10) p.x = w+10; if(p.x> w+10) p.x = -10; if(p.y< -10) p.y = h+10; if(p.y> h+10) p.y = -10; } }
+        function anim(){ draw(); requestAnimationFrame(anim); }
+        window.addEventListener('resize', resize);
+        resize(); init(); anim();
+      })();
+    </script>
+
+    {% block scripts %}
+    <script>
+      // Recommendation campaign button
+      document.addEventListener('DOMContentLoaded', function () {
+        const btn = document.getElementById('recommend-campaigns-btn');
+        if (btn) {
+          btn.addEventListener('click', () => {
+            const category = document.getElementById('influencer-category')?.value || '';
+            const niche = document.getElementById('influencer-niche')?.value || '';
+            const display = document.getElementById('campaign-recommendations');
+            if (display) display.innerHTML = 'Loading...';
+            fetch('/recommend_campaigns', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({category,niche})})
+              .then(r=>r.json()).then(data=>{
+                if (!data || data.error) { if (display) display.innerHTML = '<p class="text-danger">'+(data?.error||'Error')+'</p>'; return; }
+                if (!data.length) { if (display) display.innerHTML = '<p>No campaign recommendations found.</p>'; return; }
+                let html = '<ul class="list-group small">'; data.forEach(c=>{ html += `<li class="list-group-item"><strong>${c.name}</strong> — ${c.category} / ${c.niche}<br><small>Budget: $${c.budget} • Score: ${c.score?Number(c.score).toFixed(2):'N/A'}</small></li>` }); html += '</ul>'; if (display) display.innerHTML = html;
+              }).catch(err=>{ console.error(err); if (display) display.innerHTML = '<p class="text-danger">Failed to fetch campaigns.</p>'; });
+          });
+        }
+
+        const recommendBtn = document.getElementById('recommend-btn');
+        if (recommendBtn) {
+          recommendBtn.addEventListener('click', () => {
+            const sponsorId = document.getElementById('sponsor')?.value;
+            const category = document.getElementById('category')?.value;
+            const niche = document.getElementById('niche')?.value;
+            const tableBody = document.getElementById('recommendationTableBody');
+            if (!sponsorId || !category) { alert('Please select Sponsor and Category.'); return; }
+            if (tableBody) tableBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Loading recommendations...</td></tr>';
+            fetch('/recommend', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({sponsor_id:sponsorId,category,niche})})
+              .then(r=>r.json()).then(data=>{
+                if (!data || data.error) { if (tableBody) tableBody.innerHTML = `<tr><td colspan="5" class="text-danger text-center">${data?.error||'Error'}</td></tr>`; return; }
+                if (!data.recommendations || data.recommendations.length===0) { if (tableBody) tableBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No recommendations found.</td></tr>'; return; }
+                if (tableBody) tableBody.innerHTML = '';
+                data.recommendations.forEach(inf => {
+                  const row = tableBody.insertRow(); row.insertCell(0).textContent = inf.name; row.insertCell(1).textContent = inf.category; row.insertCell(2).textContent = inf.niche; row.insertCell(3).textContent = inf.followers; row.insertCell(4).textContent = parseFloat(inf.engagement_rate).toFixed(2);
+                });
+                const modalEl = document.getElementById('recommendationModal'); if (modalEl) new bootstrap.Modal(modalEl).show();
+              }).catch(err=>{ console.error(err); if (tableBody) tableBody.innerHTML = '<tr><td colspan="5" class="text-danger text-center">Failed to fetch recommendations.</td></tr>'; });
+          });
+        }
+      });
+
+      function toggleDarkMode(){ document.body.classList.toggle('dark-mode'); localStorage.setItem('darkMode', document.body.classList.contains('dark-mode')); }
+      document.addEventListener('DOMContentLoaded', ()=>{ if (localStorage.getItem('darkMode')==='true') document.body.classList.add('dark-mode'); });
+    </script>
+    {% endblock %}
+  </body>
+</html>
+</html>

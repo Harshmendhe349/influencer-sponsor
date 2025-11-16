@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+{% block title %}Influencer Dashboard{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center mb-3">Influencer Dashboard</h1>
+    <p class="text-center">Welcome, {{ current_user.username }}!</p>
+
+    <div class="myblock">
+        <h3 class="text-center mb-3">My Ad Requests</h3>
+        {% if ad_requests %}
+            <ul class="list-group">
+                {% for request in ad_requests %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div>
+                        <strong>Campaign:</strong>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#campaignModal{{ request.campaign.id }}">
+                            {{ request.campaign.title }}
+                        </a>
+                        <br>
+                        <strong>Status:</strong>
+                        <span class="badge {% if request.status == 'accepted' %}bg-success{% elif request.status == 'rejected' %}bg-danger{% elif request.status == 'pending' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                            {{ request.status|capitalize }}
+                        </span>
+                        <br>
+                        <strong>Created At:</strong> {{ request.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                        {% if request.terms %}
+                        <br>
+                        <strong>Negotiation Terms:</strong> {{ request.terms }}
+                        {% endif %}
+                    </div>
+                </li>
+
+                <!-- Campaign Details Modal -->
+                <div class="modal fade" id="campaignModal{{ request.campaign.id }}" tabindex="-1" aria-labelledby="campaignModalLabel{{ request.campaign.id }}" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="campaignModalLabel{{ request.campaign.id }}">Campaign Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <h4>{{ request.campaign.title }}</h4>
+                        <p><strong>Description:</strong> {{ request.campaign.description or "No description provided" }}</p>
+                        <p><strong>Budget:</strong> ${{ "%.2f"|format(request.campaign.budget) }}</p>
+                        <p><strong>Category:</strong> {{ request.campaign.category }}</p>
+                        <p><strong>Created:</strong> {{ request.campaign.created_at.strftime('%Y-%m-%d') }}</p>
+                        <hr>
+                        <h5>Sponsor Information</h5>
+                        <p><strong>Name:</strong> {{ request.campaign.sponsor.username }}</p>
+                        {% if request.campaign.sponsor.sponsor %}
+                        <p><strong>Company:</strong> {{ request.campaign.sponsor.sponsor.company_name or "N/A" }}</p>
+                        <p><strong>Industry:</strong> {{ request.campaign.sponsor.sponsor.industry or "N/A" }}</p>
+                        <p><strong>Email:</strong> {{ request.campaign.sponsor.sponsor.email or "N/A" }}</p>
+                        <p><strong>Campaign Goals:</strong> {{ request.campaign.sponsor.sponsor.campaign_goals or "N/A" }}</p>
+                        {% endif %}
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="no-requests">You have not sent any ad requests.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

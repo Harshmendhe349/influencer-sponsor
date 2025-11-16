@@ -1,0 +1,28 @@
+/* navbar.css - clean, compact navbar styles */
+
+:root { --site-max-width:1140px; --navbar-vertical:.25rem; --navbar-horizontal:.75rem; --btn-radius:.45rem; --glass-bg: rgba(255,255,255,0.72); }
+
+body { font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:#0f1724; color:#0b1220; position:relative; z-index:1; }
+
+.navbar { padding: var(--navbar-vertical) var(--navbar-horizontal); }
+.navbar-brand { font-weight:700; font-size:1rem; letter-spacing:0.3px; }
+.navbar .nav-link { padding: .35rem .6rem; font-size:.95rem; color: rgba(255,255,255,0.95); }
+.navbar .btn { margin-left:.25rem; padding:.38rem .7rem; font-size:.92rem; border-radius:var(--btn-radius); }
+.navbar .btn-sm { padding:.28rem .5rem; font-size:.85rem; }
+
+.sticky-top { top:0; z-index:1030; }
+
+.dark-mode { background:#0b0b0b; color:#e6e6e6; }
+.dark-mode .navbar { background:#0b1220 !important; }
+
+/* reduce side gaps under container */
+main.container { max-width:var(--site-max-width); padding-left:.8rem; padding-right:.8rem; position:relative; z-index:5; }
+
+/* background canvas sits beneath everything */
+#bgParticles { position:fixed; left:0; top:0; width:100%; height:100%; z-index:10; pointer-events:none; }
+
+/* make navbar visually compact on small screens */
+@media (max-width: 576px) {
+	.navbar { padding: .2rem .6rem; }
+	.navbar-brand { font-size:.96rem; }
+}

@@ -1,0 +1,133 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<div class="container">
+  <div class="auth-card mt-5 mx-auto" style="max-width:480px;">
+    <div class="auth-title text-center">Login to Your Account</div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="toast-container">
+          {% for category, message in messages %}
+            <div class="toast align-items-center text-bg-{{ category }} border-0 show" role="alert">
+              <div class="d-flex">
+                <div class="toast-body">{{ message }}</div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('get_login') }}" method="POST" id="loginForm" class="form-row-compact">
+      <!-- Email -->
+      <div class="form-floating mb-3">
+        <input type="email" name="email" class="form-control form-control-sm" id="email" placeholder="name@example.com" required autofocus>
+        <label for="email"><i class="bi bi-envelope"></i> Email address</label>
+      </div>
+
+      <!-- Password -->
+      <div class="form-floating mb-2">
+        <input type="password" name="password" id="password" class="form-control form-control-sm" placeholder="Password" required>
+        <label for="password"><i class="bi bi-lock"></i> Password</label>
+      </div>
+      <div class="password-meter"><div id="passwordMeter" class="password-meter-fill bg-danger"></div></div>
+
+      <!-- Show/hide password -->
+      <div class="form-check form-switch my-2">
+        <input class="form-check-input" type="checkbox" role="switch" id="togglePassword">
+        <label class="form-check-label" for="togglePassword">Show password</label>
+      </div>
+
+      <!-- Role -->
+      <div class="form-floating mb-3">
+        <select name="role" class="form-select form-select-sm" id="roleSelect" required>
+          <option value="" disabled selected>Select your role</option>
+          <option value="admin">Admin</option>
+          <option value="sponsor">Sponsor</option>
+          <option value="influencer">Influencer</option>
+        </select>
+        <label for="roleSelect"><i class="bi bi-person-badge"></i> Role</label>
+      </div>
+      <div id="roleInfo" class="form-hint mb-3"></div>
+
+      <!-- reCAPTCHA placeholder -->
+      <!-- <div class="mb-3">[ reCAPTCHA would go here ]</div> -->
+
+      <button type="submit" class="btn btn-primary w-100" id="loginBtn">
+        <span id="loginText">Login</span>
+        <span id="loginSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+      </button>
+
+      <div class="text-center mt-3">
+        <a href="{{ url_for('get_signup') }}" class="link">Don't have an account? Sign up</a>
+        <br>
+        <a href="#" class="link">Forgot your password?</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Password toggle
+  document.getElementById("togglePassword").addEventListener("change", function () {
+    const pwd = document.getElementById("password");
+    pwd.type = this.checked ? "text" : "password";
+  });
+
+  // Password strength meter
+  document.getElementById("password").addEventListener("input", function () {
+    const meter = document.getElementById("passwordMeter");
+    const val = this.value;
+    let score = 0;
+    if (val.length > 5) score += 25;
+    if (/[A-Z]/.test(val)) score += 25;
+    if (/[0-9]/.test(val)) score += 25;
+    if (/[^A-Za-z0-9]/.test(val)) score += 25;
+
+    meter.style.width = score + "%";
+    meter.className = "password-meter-fill";
+    meter.classList.add(score < 50 ? "bg-danger" : score < 75 ? "bg-warning" : "bg-success");
+  });
+
+  // Smart role info
+  const roleSelect = document.getElementById("roleSelect");
+  const roleInfo = document.getElementById("roleInfo");
+  roleSelect.addEventListener("change", function () {
+    const role = this.value;
+    localStorage.setItem("lastRole", role);
+    roleInfo.textContent = {
+      admin: "Admins can manage the entire platform.",
+      sponsor: "Sponsors can create and manage campaigns.",
+      influencer: "Influencers can apply and earn through campaigns."
+    }[role] || "";
+  });
+
+  // Restore last role
+  document.addEventListener("DOMContentLoaded", () => {
+    const lastRole = localStorage.getItem("lastRole");
+    if (lastRole) {
+      roleSelect.value = lastRole;
+      roleSelect.dispatchEvent(new Event("change"));
+    }
+  });
+
+  // Button spinner
+  document.getElementById("loginForm").addEventListener("submit", function () {
+    const btn = document.getElementById("loginBtn");
+    document.getElementById("loginText").classList.add("d-none");
+    document.getElementById("loginSpinner").classList.remove("d-none");
+    btn.disabled = true;
+  });
+
+  // Dark mode persistence
+  document.addEventListener("DOMContentLoaded", () => {
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark-mode');
+    }
+  });
+</script>
+
+{% endblock %}
