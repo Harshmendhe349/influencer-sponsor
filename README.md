@@ -1,62 +1,52 @@
-📣 Influencer–Sponsor Platform
+# Influencer–Sponsor Platform
 
-A full-stack Influencer Marketing & Sponsorship Management Platform built using Flask, SQLite, and Machine Learning.
-Sponsors can create campaigns, influencers can apply and negotiate, and admins can monitor all activity in one unified system.
+This is a full-stack Influencer Marketing and Sponsorship Management Platform built using Flask and SQLite. Sponsors can create campaigns, influencers can apply and negotiate, and admins can monitor all user and campaign activity.
 
-🚀 Features
-⭐ Sponsor Dashboard
+---
 
-Create and manage advertising campaigns
+## Features
 
-View influencer ad requests
+### Sponsor Features
+- Create and manage advertisement campaigns
+- View incoming influencer ad requests
+- Accept, reject, or negotiate with influencers
+- Search influencers by category, niche, or reach
+- Receive ML-based influencer recommendations
 
-Accept, reject, or negotiate
+### Influencer Features
+- Create and update public profile
+- Browse active campaigns
+- Send ad requests
+- Negotiate with sponsors
+- View request status (pending, accepted, rejected)
 
-Search influencers by category/niche
+### Admin Features
+- Full visibility into all users and campaigns
+- View and manage flagged users and campaigns
+- Monitor platform activity
+- Root-level access to data
 
-Get ML-based influencer recommendations
+### ML Recommendation System
+- Uses synthetic influencer dataset
+- Includes preprocessing and training scripts
+- Produces a trained model (.pkl)
+- Suggests best-matched influencers for campaigns
 
-⭐ Influencer Dashboard
+---
 
-Create and update public profile
+## Tech Stack
 
-Browse active campaigns
+Backend: Flask (Python)  
+Frontend: HTML, CSS, Bootstrap, Jinja2  
+Database: SQLite  
+Machine Learning: Scikit-Learn, Pandas, NumPy  
+Environment: Virtualenv or Pipenv  
 
-Send ad requests
+---
 
-Negotiate with sponsors
+## Project Structure
 
-Track request status (pending/accepted/rejected)
-
-⭐ Admin Dashboard
-
-Monitor all users and campaigns
-
-View flagged influencers/sponsors
-
-Flag campaign violations
-
-Full system oversight
-
-⭐ AI Recommendation System
-
-Uses synthetic influencer dataset
-
-Preprocessing and training scripts included
-
-Generates a .pkl ML model
-
-Recommends best influencers for campaigns
-
-🧠 Tech Stack
-
-Backend: Flask (Python)
-Frontend: HTML, CSS, Bootstrap, Jinja2
-Database: SQLite
-ML: Pandas, NumPy, Scikit-Learn
-Environment: Virtualenv / Pipenv
-
-📁 Project Structure
+```
 influencer-sponsor/
 │── app.py
 │── create_db.py
@@ -71,69 +61,87 @@ influencer-sponsor/
 │── migrations/
 │── Pipfile
 │── Pipfile.lock
+│── requirements.txt
 │── .gitignore
 │── README.md
+```
 
-⚙️ Installation
-1️⃣ Clone Repository
+---
+
+## Installation
+
+### 1. Clone the Repository
+```
 git clone https://github.com/Harshmendhe349/influencer-sponsor.git
 cd influencer-sponsor
+```
 
-2️⃣ Create Virtual Environment
+### 2. Create a Virtual Environment
+```
 python -m venv venv
-venv\Scripts\activate      # Windows
-# OR
-source venv/bin/activate  # Mac/Linux
+venv\Scripts\activate        # Windows
+# or
+source venv/bin/activate    # Mac/Linux
+```
 
-3️⃣ Install Dependencies
+### 3. Install Dependencies
+```
 pip install -r requirements.txt
+```
 
-4️⃣ Initialize Database
+### 4. Initialize Database
+```
 python create_db.py
+```
 
-5️⃣ Add Admin User
+### 5. Add Admin User
+```
 python add_admin.py
+```
 
-6️⃣ (Optional) Train ML Model
+### 6. (Optional) Retrain Machine Learning Model
+```
 python preprocess_data.py
 python train_model.py
+```
 
-7️⃣ Run the Server
+### 7. Run the Application
+```
 python app.py
+```
 
-
-Open in browser:
-
+Application will run at:
+```
 http://127.0.0.1:5000/
+```
 
-📦 ML System Overview
+---
 
-synthetic_influencer_data.csv: sample influencer dataset
+## ML System Details
 
-preprocess_data.py: cleans & encodes dataset
+- `synthetic_influencer_data.csv` contains demo influencer dataset.
+- `preprocess_data.py` prepares the dataset.
+- `train_model.py` trains the recommendation ML model.
+- `trained_model.pkl` stores the trained model.
+- `recommendation_model.py` loads the model for predictions.
 
-train_model.py: trains model and saves trained_model.pkl
+---
 
-recommendation_model.py: loads model and predicts recommendations
+## Roadmap
 
-🧭 Roadmap
+- Add analytics dashboard
+- Add payments / contract management
+- Add JWT or OAuth authentication
+- Add real influencer data import
+- Add in-app chat for negotiations
 
-Advanced analytics dashboard
+---
 
-Payment/contract workflow
-
-Real influencer data integration
-
-JWT-based authentication
-
-Chat system for negotiation
-
-📜 License
-
+## License
 MIT License
 
-👤 Author
+---
 
+## Author
 Harsh Mendhe
 
-If this project helped you, please ⭐ star the repository!
