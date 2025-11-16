@@ -1,0 +1,105 @@
+# ============================
+# Python / Flask Project
+# ============================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyd
+*.pyo
+*.so
+
+# Virtual Environments
+venv/
+env/
+ENV/
+.build/
+develop-eggs/
+.eggs/
+lib/
+lib64/
+bin/
+Scripts/
+Include/
+include/
+pyvenv.cfg
+*.egg-info/
+
+# Distribution / packaging
+build/
+dist/
+*.egg
+
+# Flask instance folder (contains DB & configs)
+instance/
+*.sqlite3
+*.db
+
+# Environment variables
+.env
+*.env
+
+# Flask session/storage files
+*.log
+*.pid
+
+# ============================
+# Machine Learning Assets
+# ============================
+
+# Model files
+*.pkl
+*.joblib
+*.sav
+
+# Training artifacts
+data/
+*.csv
+*.npz
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# ============================
+# IDE / Editor Files
+# ============================
+
+# VS Code
+.vscode/
+.history/
+
+# PyCharm
+.idea/
+
+# ============================
+# OS Generated Files
+# ============================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ============================
+# Node / Frontend (just in case)
+# ============================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ============================
+# Temp & Cache
+# ============================
+
+*.tmp
+*.temp
+*.cache
+.cache/
+__temp__/
