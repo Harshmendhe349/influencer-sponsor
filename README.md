@@ -1,47 +1,139 @@
-# Flask Login and Registration
-Flask Login and Registration System through SQLite.
-### Git Clone 
-``` git clone https://github.com/maheshkareeya/flask-login.git```
-### Change Directory
-```cd flask-login```
-### Note : Install Python and Postman for your system
-```pip install virtualenv```
+📣 Influencer–Sponsor Platform
 
-python3 -m venv venv
+A full-stack Influencer Marketing & Sponsorship Management Platform built using Flask, SQLite, and Machine Learning.
+Sponsors can create campaigns, influencers can apply and negotiate, and admins can monitor all activity in one unified system.
+
+🚀 Features
+⭐ Sponsor Dashboard
+
+Create and manage advertising campaigns
+
+View influencer ad requests
+
+Accept, reject, or negotiate
+
+Search influencers by category/niche
+
+Get ML-based influencer recommendations
+
+⭐ Influencer Dashboard
+
+Create and update public profile
+
+Browse active campaigns
+
+Send ad requests
+
+Negotiate with sponsors
+
+Track request status (pending/accepted/rejected)
+
+⭐ Admin Dashboard
+
+Monitor all users and campaigns
+
+View flagged influencers/sponsors
+
+Flag campaign violations
+
+Full system oversight
+
+⭐ AI Recommendation System
+
+Uses synthetic influencer dataset
+
+Preprocessing and training scripts included
+
+Generates a .pkl ML model
+
+Recommends best influencers for campaigns
+
+🧠 Tech Stack
+
+Backend: Flask (Python)
+Frontend: HTML, CSS, Bootstrap, Jinja2
+Database: SQLite
+ML: Pandas, NumPy, Scikit-Learn
+Environment: Virtualenv / Pipenv
+
+📁 Project Structure
+influencer-sponsor/
+│── app.py
+│── create_db.py
+│── add_admin.py
+│── synthetic_influencer_data.csv
+│── preprocess_data.py
+│── train_model.py
+│── recommendation_model.py
+│── trained_model.pkl
+│── templates/
+│── static/
+│── migrations/
+│── Pipfile
+│── Pipfile.lock
+│── .gitignore
+│── README.md
+
+⚙️ Installation
+1️⃣ Clone Repository
+git clone https://github.com/Harshmendhe349/influencer-sponsor.git
+cd influencer-sponsor
+
+2️⃣ Create Virtual Environment
+python -m venv venv
+venv\Scripts\activate      # Windows
+# OR
+source venv/bin/activate  # Mac/Linux
+
+3️⃣ Install Dependencies
+pip install -r requirements.txt
+
+4️⃣ Initialize Database
+python create_db.py
+
+5️⃣ Add Admin User
+python add_admin.py
+
+6️⃣ (Optional) Train ML Model
+python preprocess_data.py
+python train_model.py
+
+7️⃣ Run the Server
+python app.py
 
 
-source venv/bin/activate
+Open in browser:
 
+http://127.0.0.1:5000/
 
-```pip install flask flask-sqlalchemy flask-login```
-### Export 
-```export FLASK_APP=app.py```
+📦 ML System Overview
 
-```export FLASK_DEBUG=True```
+synthetic_influencer_data.csv: sample influencer dataset
 
-``` flask run ``` 
-### Create DB 
-```python```
+preprocess_data.py: cleans & encodes dataset
 
-```from app import db```
+train_model.py: trains model and saves trained_model.pkl
 
-``` db.create_all() ``` 
-``` exit() ``` 
-### Start Server
-```flask run```
-### Open Browser
-http://localhost:5000
+recommendation_model.py: loads model and predicts recommendations
 
+🧭 Roadmap
 
-### Demo
-![alt text](https://user-images.githubusercontent.com/16520789/71319725-f2463280-24c7-11ea-9e73-729dd79c6681.png "Node File Explorer")
-![alt text](https://user-images.githubusercontent.com/16520789/71319729-fffbb800-24c7-11ea-9cad-a62dd1dd5509.png "Node File Explorer")
-![alt text](https://user-images.githubusercontent.com/16520789/71319732-0ab64d00-24c8-11ea-99f2-189e753519b8.png "Node File Explorer")
+Advanced analytics dashboard
 
+Payment/contract workflow
 
+Real influencer data integration
 
+JWT-based authentication
 
+Chat system for negotiation
 
-curl -X GET http://127.0.0.1:5000/influencers
-curl -X GET http://127.0.0.1:5000/sponors
+📜 License
 
+MIT License
+
+👤 Author
+
+Harsh Mendhe
+
+If this project helped you, please ⭐ star the repository!
